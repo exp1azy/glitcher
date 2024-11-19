@@ -7,8 +7,8 @@ namespace Glitcher
     /// </summary>
     internal class VolumeChanger
     {
-        private MMDeviceEnumerator enumerator;
-        private MMDevice defaultDevice;
+        private readonly MMDeviceEnumerator enumerator;
+        private readonly MMDevice? defaultDevice;
 
         /// <summary>
         /// Constructor that initializes the VolumeChanger by retrieving the default audio output device.

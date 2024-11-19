@@ -11,6 +11,16 @@
         FlashWindow,
 
         /// <summary>
+        /// Randomly moves or manipulates the window on the screen.
+        /// </summary>
+        ManipulateWindow,
+
+        /// <summary>
+        /// Creates a fake shortcut on the desktop.
+        /// </summary>
+        CreateShortcut,
+
+        /// <summary>
         /// Moves the mouse cursor to a random or predefined position.
         /// </summary>
         MoveCursor,

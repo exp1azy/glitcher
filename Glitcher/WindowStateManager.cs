@@ -18,6 +18,9 @@ namespace Glitcher
         private static extern int GetWindowTextLength(IntPtr hWnd);
 
         [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32.dll", SetLastError = true)]
         private static extern bool IsWindowVisible(IntPtr hWnd);
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -26,10 +29,21 @@ namespace Glitcher
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
         private const int SW_MINIMIZE = 6;
         private const int SW_RESTORE = 9;
 
         private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
+        private struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
 
         /// <summary>
         /// Flashes a random open window by minimizing and restoring it.
@@ -37,9 +51,9 @@ namespace Glitcher
         public static void FlashRandom()
         {
             var random = new Random();
-            var openWindows = GetOpenWindows();
+            var openWindows = GetVisibleWindows();
 
-            var index = random.Next(openWindows.Count - 1);
+            var index = random.Next(openWindows.Count);
             IntPtr hWnd = FindWindow(null, openWindows[index]);
 
             if (hWnd != IntPtr.Zero)
@@ -50,7 +64,28 @@ namespace Glitcher
             }         
         }
 
-        private static List<string> GetOpenWindows()
+        public static void ManipulateRandom()
+        {
+            var random = new Random();
+            var openWindows = GetVisibleWindows();
+
+            if (openWindows.Count > 0)
+            {
+                var index = random.Next(openWindows.Count);
+                IntPtr hWnd = FindWindow(null, openWindows[index]);
+                if (hWnd != IntPtr.Zero && GetWindowRect(hWnd, out _))
+                {
+                    int newWidth = random.Next(200, 800);
+                    int newHeight = random.Next(200, 600);
+                    int newX = random.Next(0, 1000);
+                    int newY = random.Next(0, 800);
+
+                    MoveWindow(hWnd, newX, newY, newWidth, newHeight, true);
+                }
+            }
+        }
+
+        private static List<string> GetVisibleWindows()
         {
             List<string> windowList = [];
 

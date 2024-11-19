@@ -8,6 +8,8 @@
         {
             actions = [ 
                 GlitchAction.FlashWindow, 
+                GlitchAction.ManipulateWindow,
+                GlitchAction.CreateShortcut,
                 GlitchAction.MoveCursor, 
                 GlitchAction.PlaySound, 
                 GlitchAction.ChangeVolume, 
@@ -17,6 +19,7 @@
             ];
 
             var random = new Random();
+            var shortcutFactory = new ShortcutFactory();
 
             TimerSetter.Set(() =>
             {
@@ -27,6 +30,12 @@
                 {
                     case GlitchAction.FlashWindow:
                         FlashWindow();
+                        break;
+                    case GlitchAction.ManipulateWindow:
+                        ManipulateWindow();
+                        break;
+                    case GlitchAction.CreateShortcut:                       
+                        CreateShortcut(shortcutFactory);
                         break;
                     case GlitchAction.MoveCursor:
                         MoveCursor();
@@ -47,7 +56,7 @@
                         OpenImage();
                         break;
                 }
-            }, 2);
+            }, 1);
             
             await Task.Delay(Timeout.Infinite);
         }
@@ -56,6 +65,17 @@
         /// Flash a random window on the screen.
         /// </summary>
         private static void FlashWindow() => WindowStateManager.FlashRandom();
+
+        /// <summary>
+        /// Simulates a random manipulation of a window.
+        /// </summary>
+        private static void ManipulateWindow() => WindowStateManager.ManipulateRandom();
+
+        /// <summary>
+        /// Creates a fake shortcut on the desktop with a specified prefix.
+        /// </summary>
+        /// <param name="shortcutFactory">The instance of the ShortcutFactory to create the shortcut.</param>
+        private static void CreateShortcut(ShortcutFactory shortcutFactory) => shortcutFactory.CreateShortcut("goida");
 
         /// <summary>
         /// Play a random sound.

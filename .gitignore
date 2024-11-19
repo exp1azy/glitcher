@@ -1,4 +1,4 @@
 .vs/
 Glitcher/Properties/
-bin/
-obj/
+Glitcher/bin/
+Glitcher/obj/
