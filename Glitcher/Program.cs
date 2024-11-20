@@ -20,8 +20,9 @@
 
             var random = new Random();
             var shortcutFactory = new ShortcutFactory();
+            int seconds = 1;
 
-            TimerSetter.Set(() =>
+            TimerSetter.Set(async () =>
             {
                 var actionIndex = random.Next(actions.Length);
                 var action = actions[actionIndex];
@@ -29,12 +30,12 @@
                 switch (action)
                 {
                     case GlitchAction.FlashWindow:
-                        FlashWindow();
+                        await FlashWindowAsync();
                         break;
                     case GlitchAction.ManipulateWindow:
                         ManipulateWindow();
                         break;
-                    case GlitchAction.CreateShortcut:                       
+                    case GlitchAction.CreateShortcut:
                         CreateShortcut(shortcutFactory);
                         break;
                     case GlitchAction.MoveCursor:
@@ -56,7 +57,7 @@
                         OpenImage();
                         break;
                 }
-            }, 1);
+            }, seconds);
             
             await Task.Delay(Timeout.Infinite);
         }
@@ -64,7 +65,7 @@
         /// <summary>
         /// Flash a random window on the screen.
         /// </summary>
-        private static void FlashWindow() => WindowStateManager.FlashRandom();
+        private static async Task FlashWindowAsync() => await WindowStateManager.FlashRandomAsync();
 
         /// <summary>
         /// Simulates a random manipulation of a window.
@@ -75,12 +76,12 @@
         /// Creates a fake shortcut on the desktop with a specified prefix.
         /// </summary>
         /// <param name="shortcutFactory">The instance of the ShortcutFactory to create the shortcut.</param>
-        private static void CreateShortcut(ShortcutFactory shortcutFactory) => shortcutFactory.CreateShortcut("goida");
+        private static void CreateShortcut(ShortcutFactory shortcutFactory) => shortcutFactory.CreateShortcut("goida", "svo", "zov");
 
         /// <summary>
         /// Play a random sound.
         /// </summary>
-        private static void PlaySound() => SystemSoundsPlayer.PlayRandom();
+        private static void PlaySound() => SystemSoundPlayer.PlayRandom();
 
         /// <summary>
         /// Open a web page in the default browser.

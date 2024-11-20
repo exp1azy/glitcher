@@ -5,6 +5,7 @@
     /// </summary>
     internal class ProgramLauncher
     {
+        private static readonly Random _random = new();
         private static readonly string[] _programs = ["calc", "mspaint", "taskmgr"];
 
         /// <summary>
@@ -14,9 +15,7 @@
         {
             try
             {
-                var random = new Random();
-
-                int programIndex = random.Next(_programs.Length);
+                int programIndex = _random.Next(_programs.Length);
                 string programToLaunch = _programs[programIndex];
 
                 ProcessRunner.Start($"{programToLaunch}.exe");

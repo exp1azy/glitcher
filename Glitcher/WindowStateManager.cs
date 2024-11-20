@@ -35,6 +35,9 @@ namespace Glitcher
         private const int SW_MINIMIZE = 6;
         private const int SW_RESTORE = 9;
 
+        private static readonly (int width, int height) screenResolution = Screen.GetResolution();
+        private static readonly Random _random = new();
+
         private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
         private struct RECT
@@ -48,7 +51,7 @@ namespace Glitcher
         /// <summary>
         /// Flashes a random open window by minimizing and restoring it.
         /// </summary>
-        public static void FlashRandom()
+        public static async Task FlashRandomAsync()
         {
             var random = new Random();
             var openWindows = GetVisibleWindows();
@@ -59,26 +62,25 @@ namespace Glitcher
             if (hWnd != IntPtr.Zero)
             {
                 ShowWindow(hWnd, SW_MINIMIZE);
-                Task.Delay(2000).Wait();
+                await Task.Delay(2000);
                 ShowWindow(hWnd, SW_RESTORE);
             }         
         }
 
         public static void ManipulateRandom()
         {
-            var random = new Random();
             var openWindows = GetVisibleWindows();
 
             if (openWindows.Count > 0)
             {
-                var index = random.Next(openWindows.Count);
+                var index = _random.Next(openWindows.Count);
                 IntPtr hWnd = FindWindow(null, openWindows[index]);
                 if (hWnd != IntPtr.Zero && GetWindowRect(hWnd, out _))
                 {
-                    int newWidth = random.Next(200, 800);
-                    int newHeight = random.Next(200, 600);
-                    int newX = random.Next(0, 1000);
-                    int newY = random.Next(0, 800);
+                    int newWidth = _random.Next(200, screenResolution.width);
+                    int newHeight = _random.Next(200, screenResolution.height);
+                    int newX = _random.Next(0, screenResolution.width);
+                    int newY = _random.Next(0, screenResolution.height);
 
                     MoveWindow(hWnd, newX, newY, newWidth, newHeight, true);
                 }
